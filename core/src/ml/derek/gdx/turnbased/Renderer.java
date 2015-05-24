@@ -15,10 +15,8 @@ import ml.derek.gdx.turnbased.models.Creature;
 import ml.derek.gdx.turnbased.models.Map;
 import ml.derek.gdx.turnbased.models.Tile;
 import ml.derek.gdx.turnbased.models.characters.Man;
-import ml.derek.gdx.turnbased.models.tiles.Mountain;
-import ml.derek.gdx.turnbased.models.tiles.Ocean;
-import ml.derek.gdx.turnbased.models.tiles.Plain;
-import ml.derek.gdx.turnbased.models.tiles.Shrub;
+import ml.derek.gdx.turnbased.models.entities.Tree;
+import ml.derek.gdx.turnbased.models.tiles.*;
 
 public class Renderer
 {
@@ -53,9 +51,11 @@ public class Renderer
 		tileTextures = new ObjectMap<Class, TextureRegion>();
 		tileTextures.put(Mountain.class, new TextureRegion(tileset, 0, 0, 15, 26));
 		tileTextures.put(Plain.class, new TextureRegion(tileset, 15, 0, 15, 26));
-		tileTextures.put(Ocean.class, new TextureRegion(tileset, 31, 0, 15, 26));
+		tileTextures.put(Ocean.class, new TextureRegion(tileset, 30, 0, 15, 26));
 		tileTextures.put(Man.class, new TextureRegion(tileset, 45, 0, 15, 26));
 		tileTextures.put(Shrub.class, new TextureRegion(tileset, 60, 0, 15, 26));
+		tileTextures.put(Beach.class, new TextureRegion(tileset, 75, 0, 15, 26));
+		tileTextures.put(Tree.class, new TextureRegion(tileset, 90, 0, 15, 26));
 
 		drawingPos = new Vector2();
 	}
@@ -93,10 +93,10 @@ public class Renderer
 				batch.draw(tileTextures.get(tile.getClass()),
 						drawingPos.x, drawingPos.y, WIDTH, HEIGHT * 2);
 
-				if(tile.hasCreature())
+				if(tile.hasEntity())
 				{
 					// TODO: ADD LERPING FOR CREATURES HERE
-					batch.draw(tileTextures.get(tile.getCreature().getClass()),
+					batch.draw(tileTextures.get(tile.getEntity().getClass()),
 							drawingPos.x, drawingPos.y, WIDTH, HEIGHT * 2);
 				}
 			}

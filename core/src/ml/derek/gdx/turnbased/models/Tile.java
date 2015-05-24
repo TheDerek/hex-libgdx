@@ -5,7 +5,7 @@ import ml.derek.gdx.turnbased.util.Vector3i;
 
 public abstract class Tile extends Hexagon
 {
-	protected Creature creature = null;
+	protected Entity entity = null;
 
 	public Tile(Vector3i position)
 	{
@@ -29,22 +29,22 @@ public abstract class Tile extends Hexagon
 
 	public abstract boolean isSolid();
 
-	public boolean hasCreature()
+	public boolean hasEntity()
 	{
-		return creature != null;
+		return entity != null;
 	}
 
-	public Creature getCreature()
+	public Entity getEntity()
 	{
-		return creature;
+		return entity;
 	}
 
-	protected boolean setCreature(Creature creature)
+	protected boolean setEntity(Entity entity)
 	{
-		if(this.creature != null)
+		if(this.entity != null)
 			return false;
 
-		this.creature = creature;
+		this.entity = entity;
 		return true;
 	}
 }

@@ -3,16 +3,14 @@ package ml.derek.gdx.turnbased.models;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Array;
-import ml.derek.gdx.turnbased.models.tiles.Plain;
 import ml.derek.gdx.turnbased.util.Vector2i;
-import ml.derek.gdx.turnbased.util.Vector3i;
-
-import java.util.Random;
 
 public class Map
 {
+	private static int[][] directions = new int[][]{{-1,-1}, {-1,0}, {-1,1},  {0,1}, {1,1},  {1,0},  {1,-1},  {0, -1}};
+
 	private final Tile[][] grid;
-	private final Array<Creature> creatures;
+	private final Array<Entity> entities;
 	public final int height;
 	public final int width;
 
@@ -21,7 +19,7 @@ public class Map
 		this.grid = grid;
 		width = grid[0].length;
 		height = grid.length;
-		creatures = new Array<Creature>();
+		entities = new Array<Entity>();
 	}
 
 	public Tile get(int x, int y)
@@ -30,35 +28,39 @@ public class Map
 	}
 
 	/**
-	 * Attempts to add the creature to the specified tile,
-	 * removed the creature from it's last tile if it exists
+	 * Attempts to add the entity to the specified tile,
+	 * removed the entity from it's last tile if it exists
 	 * Returns false if the tile is occupied.
-	 * @param creature The creature to add.
-	 * @param x The X coordinate in the map to add the creature to.
-	 * @param y The Y coordinate in the map to add the creature to.
+	 * @param entity The entity to add.
+	 * @param x The X coordinate in the map to add the entity to.
+	 * @param y The Y coordinate in the map to add the entity to.
 	 * @return True is the operation was successful.
 	 */
-	public boolean setCreature(Creature creature, int x, int y)
+	public boolean setEntity(Entity entity, int x, int y)
 	{
 		if(x > width - 1 || y > height - 1 || x < 0 || y < 0)
 			return false;
 
-		if(grid[y][x].hasCreature())
+		if(grid[y][x].hasEntity())
 			return false;
 
 		if(grid[y][x].isSolid())
 			return false;
 
-		if(creature.getTile() != null)
-			creature.getTile().creature = null;
 
-		if(!creatures.contains(creature, false))
-			creatures.add(creature);
+		if(entity.getTile() != null)
+		{
+			entity.lastTile = entity.getTile();
+			entity.getTile().entity = null;
+		}
 
-		creature.oldTile = creature.getTile();
-		creature.setTile(grid[y][x]);
+		if(!entities.contains(entity, false))
+			entities.add(entity);
 
-		return grid[y][x].setCreature(creature);
+
+		entity.setTile(grid[y][x]);
+
+		return grid[y][x].setEntity(entity);
 	}
 
 	/**
@@ -82,7 +84,7 @@ public class Map
 			return false;
 		}
 
-		return setCreature(creature, x2, y2);
+		return setEntity(creature, x2, y2);
 	}
 
 	public boolean moveCreatureRelative(Creature creature, int x2, int y2)
@@ -98,7 +100,28 @@ public class Map
 		if(oldPos.y % 2 != 0 && y2 < 0 && x2 == 0)
 			x2 = 0;
 
+		// The creature is moving vertically
+		//if(x2 == 0 && y2 != 0)
+		{
+			//if(grid[y2][x2].hasEntity() || grid[y2][x2].isSolid())
+			//	x2 = 1;
+		}
+
 		return moveCreature(creature, oldPos.x + x2, oldPos.y + y2);
+	}
+
+	public static Array<Tile> getSurroundings(Tile[][] map, int x, int y) {
+		Array<Tile> res = new Array<Tile>();
+		for (int[] direction : directions)
+		{
+			int cx = x + direction[0];
+			int cy = y + direction[1];
+			if(cy >=0 && cy < map.length)
+				if(cx >= 0 && cx < map[cy].length)
+					res.add(map[cy][cx]);
+		}
+
+		return res;
 	}
 
 	public Tile randomTile()
