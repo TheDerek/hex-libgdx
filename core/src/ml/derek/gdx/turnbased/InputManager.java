@@ -14,36 +14,46 @@ public class InputManager
 		this.creature = creature;
 	}
 
-	public void update(Map map)
+	public void update(Map map, int framesPerStep)
 	{
-		if(Gdx.input.isKeyJustPressed(Input.Keys.D))
+		if(Gdx.input.isKeyPressed(Input.Keys.D))
 		{
 			map.moveCreatureRelative(creature, 1, 0);
 		}
 
-		if(Gdx.input.isKeyJustPressed(Input.Keys.A))
+		if(Gdx.input.isKeyPressed(Input.Keys.A))
 		{
 			map.moveCreatureRelative(creature, -1, 0);
 		}
 
-		if(Gdx.input.isKeyJustPressed(Input.Keys.Q))
+		if(Gdx.input.isKeyPressed(Input.Keys.Q))
 		{
 			map.moveCreatureRelative(creature, -1, 1);
 		}
 
-		if(Gdx.input.isKeyJustPressed(Input.Keys.E))
+		if(Gdx.input.isKeyPressed(Input.Keys.E))
 		{
 			map.moveCreatureRelative(creature, 1, 1);
 		}
 
-		if(Gdx.input.isKeyJustPressed(Input.Keys.X))
+		if(Gdx.input.isKeyPressed(Input.Keys.X))
 		{
 			map.moveCreatureRelative(creature, 1, -1);
 		}
 
-		if(Gdx.input.isKeyJustPressed(Input.Keys.Z))
+		if(Gdx.input.isKeyPressed(Input.Keys.Z))
 		{
 			map.moveCreatureRelative(creature, -1, -1);
+		}
+
+		if(Gdx.input.isKeyPressed(Input.Keys.W))
+		{
+			map.moveCreatureRelative(creature, 0, 1);
+		}
+
+		if(Gdx.input.isKeyPressed(Input.Keys.S))
+		{
+			map.moveCreatureRelative(creature, 0, -1);
 		}
 	}
 }

@@ -40,6 +40,9 @@ public class Map
 	 */
 	public boolean setCreature(Creature creature, int x, int y)
 	{
+		if(x > width - 1 || y > height - 1 || x < 0 || y < 0)
+			return false;
+
 		if(grid[y][x].hasCreature())
 			return false;
 
@@ -75,7 +78,7 @@ public class Map
 		if((Math.abs(oldPos.x - x2) > 1) || (Math.abs(oldPos.y - y2) > 1))
 		{
 			Gdx.app.log("Failure", "Can only move a creature one space away" +
-				"from its original position");
+					"from its original position");
 			return false;
 		}
 
@@ -91,6 +94,8 @@ public class Map
 		if(oldPos.y % 2 == 0 && y2 != 0 && x2 == -1)
 			x2 = 0;
 		if(oldPos.y % 2 != 0 && y2 != 0 && x2 == 1)
+			x2 = 0;
+		if(oldPos.y % 2 != 0 && y2 < 0 && x2 == 0)
 			x2 = 0;
 
 		return moveCreature(creature, oldPos.x + x2, oldPos.y + y2);

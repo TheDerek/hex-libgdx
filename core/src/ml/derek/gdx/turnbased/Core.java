@@ -8,6 +8,8 @@ import ml.derek.gdx.turnbased.models.characters.Man;
 import ml.derek.gdx.turnbased.util.Generator;
 
 public class Core extends ApplicationAdapter {
+	int framesPerStep = 60;
+
 	InputManager manager;
 	Renderer renderer;
 	Map map;
@@ -39,7 +41,7 @@ public class Core extends ApplicationAdapter {
 	@Override
 	public void render ()
 	{
-		manager.update(map);
+		manager.update(map, framesPerStep);
 		renderer.render(map);
 	}
 }
