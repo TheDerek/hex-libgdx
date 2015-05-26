@@ -41,7 +41,7 @@ public class Core extends ApplicationAdapter {
 	@Override
 	public void render ()
 	{
-		manager.update(map, framesPerStep);
-		renderer.render(map);
+		int currentFrame = manager.update(map, framesPerStep);
+		renderer.render(map, framesPerStep, currentFrame);
 	}
 }

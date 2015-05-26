@@ -12,6 +12,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.ObjectMap;
 import ml.derek.gdx.turnbased.models.Creature;
+import ml.derek.gdx.turnbased.models.Entity;
 import ml.derek.gdx.turnbased.models.Map;
 import ml.derek.gdx.turnbased.models.Tile;
 import ml.derek.gdx.turnbased.models.characters.Man;
@@ -30,8 +31,11 @@ public class Renderer
 	private ShapeRenderer shapeBatch;
 	private SpriteBatch batch;
 	private OrthographicCamera camera;
-	private Vector2 drawingPos;
 	private ObjectMap<Class, TextureRegion> tileTextures;
+
+	private Vector2 entityDrawingPos;
+	private Vector2 tileDrawingPos;
+
 
 	public Renderer(float width, float height)
 	{
@@ -57,22 +61,16 @@ public class Renderer
 		tileTextures.put(Beach.class, new TextureRegion(tileset, 75, 0, 15, 26));
 		tileTextures.put(Tree.class, new TextureRegion(tileset, 90, 0, 15, 26));
 
-		drawingPos = new Vector2();
+		tileDrawingPos = new Vector2();
 	}
 
-	public void render(Map map)
+	public void render(Map map, int framesPerStep, int currentFrame)
 	{
 		Gdx.gl.glClearColor(0.4f, 0.4f, 1f, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		//shapeBatch.begin(ShapeRenderer.ShapeType.Line);
 
-		if(focus != null)
-		{
-			Vector3 position = camera.position;
-			position.x += (focus.getPosition2().x - position.x) * lerp;
-			position.y += (focus.getPosition2().y * 3f/4f  - position.y) * lerp;
-			camera.update();
-		}
+		lerpCamera(focus.getPosition2().toFloat());
 
 		batch.setProjectionMatrix(camera.combined);
 		batch.begin();
@@ -82,22 +80,33 @@ public class Renderer
 			{
 				Tile tile = map.get(x, y);
 				if(y % 2 != 0)
-					drawingPos.set(x, y);
+					tileDrawingPos.set(x, y);
 				else
-					drawingPos.set(x + 0.5f, y);
+					tileDrawingPos.set(x + 0.5f, y);
 
-				drawingPos.x *= 1 - pixelWidth() * 2f;
-				drawingPos.y *= (3f/4f);
-				drawingPos.y *= 1f - pixelHeight() * 2f;
+				entityDrawingPos = tileDrawingPos.cpy();
 
+				toHex(tileDrawingPos);
 				batch.draw(tileTextures.get(tile.getClass()),
-						drawingPos.x, drawingPos.y, WIDTH, HEIGHT * 2);
+						tileDrawingPos.x, tileDrawingPos.y, WIDTH, HEIGHT * 2);
 
 				if(tile.hasEntity())
 				{
-					// TODO: ADD LERPING FOR CREATURES HERE
+					if(tile.getEntity().getLastTile() != null)
+					{
+						Entity entity = tile.getEntity();
+						Vector2 position = tile.position2f;
+						Vector2 lastPosition = entity.getLastTile().position2f;
+						float t = (float)currentFrame / (float)framesPerStep;
+						Gdx.app.log("Render", Float.toString(t));
+						entityDrawingPos.x = lastPosition.x + (position.x - lastPosition.x) * t;
+						entityDrawingPos.y = lastPosition.y + (position.y - lastPosition.y) * t;
+						lerpCamera(entityDrawingPos);
+					}
+
+					toHex(entityDrawingPos);
 					batch.draw(tileTextures.get(tile.getEntity().getClass()),
-							drawingPos.x, drawingPos.y, WIDTH, HEIGHT * 2);
+							entityDrawingPos.x, entityDrawingPos.y, WIDTH, HEIGHT * 2);
 				}
 			}
 		}
@@ -113,5 +122,30 @@ public class Renderer
 	public float pixelHeight()
 	{
 		return 2 * camera.viewportHeight / (float) Gdx.graphics.getHeight();
+	}
+
+	public void toHex(Vector2 vector)
+	{
+		vector.x *= 1 - pixelWidth() * 2f;
+		vector.y *= (3f/4f);
+		vector.y *= 1f - pixelHeight() * 2f;
+	}
+
+	public void toHex(Vector3 vector)
+	{
+		vector.x *= 1 - pixelWidth() * 2f;
+		vector.y *= (3f/4f);
+		vector.y *= 1f - pixelHeight() * 2f;
+	}
+
+	public void lerpCamera(Vector2 focus)
+	{
+		if(focus != null)
+		{
+			Vector3 position = camera.position;
+			position.x += (focus.x - position.x) * lerp;
+			position.y += (focus.y * 3f/4f  - position.y) * lerp;
+			camera.update();
+		}
 	}
 }

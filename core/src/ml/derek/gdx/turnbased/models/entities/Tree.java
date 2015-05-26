@@ -4,4 +4,8 @@ import ml.derek.gdx.turnbased.models.Entity;
 
 public class Tree extends Entity
 {
+	public Tree()
+	{
+		super();
+	}
 }

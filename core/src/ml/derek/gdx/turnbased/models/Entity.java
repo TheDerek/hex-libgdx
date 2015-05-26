@@ -1,11 +1,12 @@
 package ml.derek.gdx.turnbased.models;
 
+import com.badlogic.gdx.math.Vector2;
 import ml.derek.gdx.turnbased.util.Vector2i;
 import ml.derek.gdx.turnbased.util.Vector3i;
 
 public abstract class Entity
 {
-	protected Tile lastTile = null;
+	public Tile lastTile = null;
 	protected Tile tile;
 
 	protected Tile getTile()

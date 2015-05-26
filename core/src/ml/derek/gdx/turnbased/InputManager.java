@@ -12,9 +12,9 @@ public class InputManager
 	{
 		this.creature = creature;
 	}
-	private float currentFrame = 0;
+	public static int currentFrame = 0;
 
-	public void update(Map map, int framesPerStep)
+	public int update(Map map, int framesPerStep)
 	{
 		if(currentFrame < framesPerStep)
 			currentFrame++;
@@ -23,6 +23,8 @@ public class InputManager
 			currentFrame = 0;
 			step(map);
 		}
+
+		return currentFrame;
 	}
 
 	private void step(Map map)
@@ -32,6 +34,8 @@ public class InputManager
 
 	private void creatureMovement(Creature creature, Map map)
 	{
+		creature.lastTile = null;
+
 		if(Gdx.input.isKeyPressed(Input.Keys.D))
 		{
 			map.moveCreatureRelative(creature, 1, 0);
@@ -71,5 +75,6 @@ public class InputManager
 		{
 			map.moveCreatureRelative(creature, 0, -1);
 		}
+
 	}
 }

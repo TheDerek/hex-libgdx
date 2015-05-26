@@ -9,6 +9,7 @@ public class Hexagon
 {
 	public final Vector3i position;
 	public final Vector2i position2;
+	public final Vector2 position2f;
 
 	public Hexagon(Vector3i position)
 	{
@@ -18,6 +19,7 @@ public class Hexagon
 			throw new Error("Coordinates must add up to 0");
 
 		this.position2 = new Vector2i(position.x, position.y);
+		this.position2f = position2.toFloat();
 	}
 
 	public Hexagon(int x, int y, int z)
@@ -29,6 +31,7 @@ public class Hexagon
 	{
 		this.position2 = position2;
 		this.position = new Vector3i(position2.x, position2.y, -position2.x -position2.y);
+		this.position2f = position2.toFloat();
 	}
 
 	public Hexagon(int x, int y)

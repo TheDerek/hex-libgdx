@@ -4,6 +4,11 @@ import ml.derek.gdx.turnbased.models.*;
 
 public class Man extends Creature
 {
+	public Man()
+	{
+		super();
+	}
+
 	@Override
 	public int movesPerTurn()
 	{
