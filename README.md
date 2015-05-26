@@ -12,3 +12,5 @@ State of Play
 - Movement with collision implemented
 - Turn based system implemented
 - Smooth transitions between tiles worked upon, currently very buggy and commented out
+
+[DOWNLOAD THE DEMO HERE](https://github.com/TheDerek/hex-libgdx/releases/tag/0.1)
